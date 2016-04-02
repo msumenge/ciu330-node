@@ -1,6 +1,50 @@
-    <script src="<%= baseUrl %>js/jquery.mobile.custom.min.js"></script> 
-    <script src="<%= baseUrl %>js/main.js"></script>
     <script src="<%= baseUrl %>socket.io/socket.io.js"></script>
+    <script src="<%= baseUrl %>js/jquery.mobile.custom.min.js"></script>
+    <script src="<%= baseUrl %>js/main.js"></script>
+
+    <script>
+    // Socket.io
+    var socket = io('<%= baseUrl %>');
+    socket.on('initApp', function(data) {
+        console.log(data);
+        var user_image = data.image == 'undefined' ? './img/user.png' : data.image;
+        
+        $('#profile-image').css('background-image', 'url('+user_image+')');
+        $('#profile-name').text(data.name);
+        
+    });
+    
+    // Google APIs
+    var auth2;
+    var initClient = function() {
+    	gapi.load('auth2', function() {
+    		auth2 = gapi.auth2.init({
+    			client_id: '<%= clientId %>.apps.googleusercontent.com'
+    		});
+    
+    		// Listen for changes to current user.
+    		auth2.currentUser.listen(function (user) {
+                if (!user.isSignedIn()) {
+                    window.location.href = "<%= baseUrl %>signin";
+                } else {
+                    var idToken = user.getAuthResponse().id_token;
+                    var email = user.getBasicProfile().getEmail();
+                    console.log(user.getBasicProfile().getId());
+                    
+                    socket.emit('googleUser', { idToken: idToken, email: email });
+                }
+            });
+    	});
+    };
+    
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+            console.log('User signed out.');
+        });
+    }
+    </script>
+    <script src="https://apis.google.com/js/platform.js?onload=initClient" async defer></script>
     
 </body>
 </html>

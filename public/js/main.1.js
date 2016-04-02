@@ -1,3 +1,42 @@
+//toggle on and off checkbox
+/*
+    <div class="checkbox no-select">
+        <i class="fa fa-square-o"></i> Keep me signed in
+        <input type="checkbox" hidden="hidden" name="checkbox"/>
+    </div>
+*/
+$('.checkbox').on('click', function() {
+    var i_tag = $(this).find('i');
+    var checkbox = $(this).find('input');
+
+    if (i_tag.hasClass('fa-square-o')) {
+        i_tag.removeClass('fa-square-o').addClass('fa-check-square-o');
+        checkbox.prop("checked", true);
+    } else {
+        i_tag.removeClass('fa-check-square-o').addClass('fa-square-o');
+        checkbox.prop("checked", false);
+    }
+});
+
+//floating input placeholder
+/*
+    <div>
+        <span class="animate">Password</span>
+        <input type="text" name="text" />
+    </div>
+*/
+$('.form div input').on('focusin focusout', function () {
+    if ($(this).is(":focus")) {
+        $(this).siblings('span').addClass('active-input-label');
+    } else {
+        if ($(this).val() == '') {
+            $(this).siblings('span').removeClass('active-input-label');
+        }
+
+    }
+});
+
+
 //input preview
 $('#file-prev, .input-file i').on('click', function () {
 	$('#file-input').click();
@@ -171,7 +210,7 @@ $('#brush-tickness-control input').on('change mouseup vmouseup', function() {
 
 $('.profile-nav div').on('click', function () {
     switch ($(this).data('target')) {
-        case 'sign-out':
+        case 'signOut':
             signOut();
             break;
         case 'privat-chat':
