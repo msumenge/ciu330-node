@@ -27,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.set('env', 'production');
 app.set('baseUrl', 'https://ciu330-node-msumenge.c9users.io/');
 app.set('clientId', '269848732222-ql3iegev0uv7jrrl30b544cvjq17ihlb');
+app.set('themeColor', '#2196F3');
 
 var clients = {};
 var socketRef = {};
@@ -68,6 +69,8 @@ io.on('connection', function(socket){
         if (!error && response.statusCode == 200) {
             
           var google = JSON.parse(body);
+          console.log(google);
+          
           // adjust returned value
           google.picture = google.picture !== undefined ? google.picture : 'undefined';
           google.email_verified = google.email_verified === 'true' ? 1 : 0;
@@ -92,6 +95,8 @@ io.on('connection', function(socket){
                     clients[r[0].email] = r[0];
                     socketRef[socketNum] = r[0].email;
                     socket.emit('initApp', r[0]);
+                    
+                    console.log(socketRef);
                   });
                 });
               }
@@ -110,10 +115,11 @@ io.on('connection', function(socket){
                     clients[r[0].email] = r[0];
                     socketRef[socketNum] = r[0].email;
                     socket.emit('initApp', r[0]);
+                    
+                    console.log(socketRef);
                   });
                 });
               }
-              
             });
           }
         }
@@ -130,10 +136,11 @@ app.get('/', function(req, res, next) {
   var data = {
     title: 'CIU330',
     baseUrl: req.app.get('baseUrl'),
-    clientId: req.app.get('clientId')
+    clientId: req.app.get('clientId'),
+    themeColor: req.app.get('themeColor')
   };
   
-    res.render('index', data);
+  res.render('index', data);
 });
 
 // other pages

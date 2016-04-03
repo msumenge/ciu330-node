@@ -5,9 +5,13 @@ var socket = io('https://ciu330-node-msumenge.c9users.io');
 -------------------------- GitHub ------------------------------
 git remote add origin git@github.com:yourname/yourrepository.git
 ----------------------------------------------------------------
+#commit
+
 git add .
 git commit -m "First commit"
 ----------------------------------------------------------------
+#push
+
 git push -u origin master
 
 --------------------------- MySql ------------------------------

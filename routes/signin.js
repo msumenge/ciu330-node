@@ -2,7 +2,14 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-    res.render('signin', { title: 'CIU330', baseUrl: req.app.get('baseUrl'), clientId: req.app.get('clientId') });
+    var data = {
+      title: 'CIU330',
+      baseUrl: req.app.get('baseUrl'),
+      clientId: req.app.get('clientId'),
+      themeColor: req.app.get('themeColor')
+    };
+    
+    res.render('signin', data);
 });
 
 module.exports = router;
