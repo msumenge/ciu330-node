@@ -1,94 +1,8 @@
 <%- include('body_start') %>
 
-<div id="chat-window" class="mdl-layout mdl-js-layout mdl-layout--fixed-header animate">
-    <header class="mdl-layout__header">
-        <div class="back-button">
-            <a href="<%= baseUrl %>">
-                <i class="material-icons">arrow_back</i>
-            </a>
-        </div>
-        <div class="mdl-layout__header-row">
-            <span class="mdl-layout-title">Title</span>
-            <div class="mdl-layout-spacer"></div>
-            <button id="chat-options" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
-            <i class="material-icons">more_vert</i>
-            </button>
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                for="chat-options">
-                <li class="mdl-menu__item">Some Action</li>
-                <li class="mdl-menu__item">Another Action</li>
-                <li disabled class="mdl-menu__item">Disabled Action</li>
-                <li class="mdl-menu__item">Yet Another Action</li>
-            </ul>
-        </div>
-    </header>
-    <main class="mdl-layout__content">
-        <div class="page-content">
-            <div class="msg-from me fullwidth">
-                <div class="bg-cover"></div>
-                <div class="msg-time">10:27 am</div>
-                <div>Some text message</div>
-            </div>
-            <div class="msg-from other fullwidth">
-                <div class="bg-cover"></div>
-                <div class="msg-time">10:27 am</div>
-                <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</div>
-            </div>
-            
-            <textarea id="input-text" placeholder="Type something here"></textarea>
-            
-            <!--div id="input-canvas">
-                <canvas id="canvas"></canvas>
-                <div>
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                        <i class="material-icons">send</i>
-                    </button>
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                        <i class="material-icons">undo</i>
-                    </button>
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                        <i class="material-icons">delete</i>
-                    </button>
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                        <i class="material-icons">brush</i>
-                    </button>
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                        <i class="material-icons">color_lens</i>
-                    </button>
-                </div>
-            </div-->
-            
-            <!--div id="input-location" class="bg-cover" style="background-image: url('http://maps.googleapis.com/maps/api/staticmap?center=-27.4995676,152.9889577&zoom=16&size=350x250&sensor=false');">
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                    <i class="material-icons">send</i>
-                </button>
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                    <i class="material-icons">refresh</i>
-                </button>
-            </div-->
-            
-            <!--div id="input-image" class="bg-cover" style="background-image: url('http://maps.googleapis.com/maps/api/staticmap?center=-27.4995676,152.9889577&zoom=16&size=350x250&sensor=false');">
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                    <i class="material-icons">send</i>
-                </button>
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                    <i class="material-icons">file_upload</i>
-                </button>
-            </div-->
-            
-            
-            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored chat-option-button">
-                <i class="material-icons">keyboard_arrow_up</i>
-            </button>
-        </div>
-    </main>
-</div>
-
-
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-tabs">
     <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
-            <!-- Title -->
             <span class="mdl-layout-title"><%= title %></span>
             <div class="mdl-layout-spacer"></div>
             <button class="mdl-button mdl-js-button mdl-button--icon" onclick="javascript:signOut();">
@@ -106,35 +20,34 @@
             </ul>
         </div>
         
-        <!-- Tabs -->
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-            <a href="#fixed-tab-1" class="mdl-layout__tab is-active">
-                <i class="material-icons mdl-badge mdl-badge--overlap" data-badge="1">person</i>
+            <a href="#fixed-tab-1" class="mdl-layout__tab">
+                <i class="material-icons mdl-badge--overlap" data-badge="0">person</i>
                 <!-- mdl-badge mdl-badge--overlap" data-badge="1"-->
             </a>
-            <a href="#fixed-tab-2" class="mdl-layout__tab"><i class="material-icons">people</i></a>
-            <a href="#fixed-tab-3" class="mdl-layout__tab"><i class="material-icons">contacts</i></a>
+            <a href="#fixed-tab-2" class="mdl-layout__tab"><i class="material-icons mdl-badge--overlap" data-badge="0">people</i></a>
+            <a href="#fixed-tab-3" class="mdl-layout__tab is-active"><i class="material-icons mdl-badge--overlap" data-badge="0">contacts</i></a>
             <a href="#fixed-tab-4" class="mdl-layout__tab"><i class="material-icons">settings</i></a>
         </div>
     </header>
     <div class="mdl-layout__drawer">
         <span class="mdl-layout-title"><%= title %></span>
-        <div id="profile-image" class="bg-cover" style=""></div>
+        <div id="profile-image" class="bg-cover"></div>
         <h4 id="profile-name" class="text-center"></h4>
-        <span id="profile-email" class="text-center"></span>
+        <div id="profile-email" class="text-center"></div>
     </div>
     <main class="mdl-layout__content">
-        <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
+        <section class="mdl-layout__tab-panel" id="fixed-tab-1">
             <div class="page-content">
                 
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button mdl-button--colored">
+                <button id="new-chat-button" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button mdl-button--colored">
                     <i class="material-icons">chat</i>
                 </button>
                 
-                <ul class="mdl-list">
+                <ul class="privat-chat-list mdl-list">
                     <li class="mdl-list__item mdl-list__item--two-line">
                         <span class="mdl-list__item-primary-content">
-                            <i class="material-icons mdl-list__item-avatar">person</i>
+                            <div class="bg-cover profile-img-thumbnail" style="background-image: url(./img/user.png);"></div>
                             <span>Bryan Cranston</span>
                             <span class="mdl-list__item-sub-title">62 Episodes asd asd asdsad asd</span>
                         </span>
@@ -145,7 +58,7 @@
                     </li>
                     <li class="mdl-list__item mdl-list__item--two-line">
                         <span class="mdl-list__item-primary-content">
-                            <i class="material-icons mdl-list__item-avatar">person</i>
+                            <div class="bg-cover profile-img-thumbnail" style="background-image: url(./img/user.png);"></div>
                             <span>Bryan Cranston</span>
                             <span class="mdl-list__item-sub-title">62 Episodes asd asd asdsad asd</span>
                         </span>
@@ -156,7 +69,7 @@
                     </li>
                     <li class="mdl-list__item mdl-list__item--two-line">
                         <span class="mdl-list__item-primary-content">
-                            <i class="material-icons mdl-list__item-avatar">person</i>
+                            <div class="bg-cover profile-img-thumbnail" style="background-image: url(./img/user.png);"></div>
                             <span>Bryan Cranston</span>
                             <span class="mdl-list__item-sub-title">62 Episodes asd asd asdsad asd</span>
                         </span>
@@ -214,21 +127,25 @@
                 </div>
             </div>
         </section>
-        <section class="mdl-layout__tab-panel" id="fixed-tab-3">
+        <section class="mdl-layout__tab-panel is-active" id="fixed-tab-3">
             <div class="page-content">
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button mdl-button--colored">
+                <!--button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button mdl-button--colored">
                     <i class="material-icons">person_add</i>
-                </button>
-                
-                <div class="mdl-grid">
-                    <div class="mdl-cell mdl-cell--4-col-phone">
-                        <input type="text" placeholder="Search" id="contact-search-box">
-                    </div>
+                </button-->
+
+                <div id="search-box" class="fullwidth">
+                    <input type="text" placeholder="Search contact">
+                    <i class="material-icons">person_add</i>
                 </div>
                 
-                <div class="section-label">Favorites</div>
+                <div class="search-list mdl-list">
+                    <div class="section-label">Search results</div>
+                    <p>no result</p>
+                </div>
                 
-                <div class="mdl-grid">    
+                <!--div class="contact-list-favorite mdl-grid">    
+                    <div class="section-label">Favorites</div>
+                
                     <div class="mdl-cell mdl-cell--2-col-phone">
                         <div class="mdl-card">
                             <div class="mdl-card__title">
@@ -238,7 +155,6 @@
                                 <span>Group chat</span>
                                 <div class="mdl-layout-spacer"></div>
                                 <i class="material-icons">favorite</i>
-                                <!-- favorite_border -->
                             </div>
                         </div>
                     </div>
@@ -266,36 +182,17 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div-->
                 
-                <div class="section-label">Contacts</div>
-                
-                <ul class="mdl-list">
-                    <li class="mdl-list__item">
-                        <span class="mdl-list__item-primary-content">
-                            <i class="material-icons mdl-list__item-icon">person</i>
-                            Bryan Cranston
-                        </span>
-                    </li>
-                    <li class="mdl-list__item">
-                        <span class="mdl-list__item-primary-content">
-                            <i class="material-icons mdl-list__item-icon">person</i>
-                            Aaron Paul
-                        </span>
-                    </li>
-                    <li class="mdl-list__item">
-                        <span class="mdl-list__item-primary-content">
-                            <i class="material-icons mdl-list__item-icon">person</i>
-                            Bob Odenkirk
-                        </span>
-                    </li>
-                </ul>
+                <div class="request-list mdl-list"></div>
+                <div class="contact-list mdl-list"></div>
+                <div class="pending-list mdl-list"></div>
                 
             </div>
         </section>
         <section class="mdl-layout__tab-panel" id="fixed-tab-4">
             <div class="page-content">
-                <ul class="mdl-list">
+                <ul class="mdl-list settings-list">
                     <div class="section-label">Settings</div>
                     <li class="mdl-list__item">
                         <span class="mdl-list__item-primary-content">
@@ -314,6 +211,37 @@
         </section>
     </main>
 </div>
+
+<div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
+    <div class="mdl-snackbar__text"></div>
+    <button class="mdl-snackbar__action" type="button"></button>
+</div>
+
+<div id="popup" class="popup">
+    <div class="popup-overlay"></div>
+    <div class="popup-body text-center">
+        <div class="bg-cover profile-image"></div>
+        <h4 class="profile-name"></h4>
+        <div class="profile-email"></div>
+        <!-- action buttons -->
+        <input type="number" class="profile-id" hidden />
+        
+        <button data-contact-status-id="4" data-action="block" class="mdl-button mdl-js-button mdl-js-ripple-effect set-contact"><i class="material-icons">not_interested</i>&nbsp;Block</button>
+        <button data-contact-status-id="3" data-action="decline" class="mdl-button mdl-js-button mdl-js-ripple-effect set-contact"><i class="material-icons">cancel</i>&nbsp;Decline</button>
+        <button data-contact-status-id="2" data-action="accept" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored set-contact"><i class="material-icons">check_circle</i>&nbsp;Accept</button>
+        <button data-contact-status-id="1" data-action="add" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored set-contact"><i class="material-icons">person_add</i>&nbsp;&nbsp;Add</button>
+        <button data-contact-status-id="0" data-action="cancel" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect set-contact"><i class="material-icons">highlight_off</i>&nbsp;Cancel</button>
+        <button data-contact-status-id="0" data-action="remove" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect set-contact"><i class="material-icons">highlight_off</i>&nbsp;Remove</button>
+        <button data-contact-status-id="0" data-action="unblock" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect set-contact"><i class="material-icons">undo</i>&nbsp;Unblock</button>
+        
+        <div class="popup-feedback">Your request has been sent successfully!</div>
+    </div>
+</div>
+
+<audio id="sound-ping">
+    <source src="./sound/ping.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
 
 <script>
 var fullScreen = false;

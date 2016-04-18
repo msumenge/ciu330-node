@@ -1,22 +1,22 @@
 @font-face {
     font-family: font_one;
-    src: url(../fonts/TitilliumWeb-Light.ttf);
+    src: url(../font/TitilliumWeb-Light.ttf);
 }
 @font-face {
     font-family: font_two;
-    src: url(../fonts/OpenSans-Regular.ttf);
+    src: url(../font/OpenSans-Regular.ttf);
 }
 @font-face {
     font-family: font_three;
-    src: url(../fonts/Consolas.ttf);
+    src: url(../font/Consolas.ttf);
 }
 @font-face {
     font-family: font_four;
-    src: url(../fonts/VarelaRound-Regular.otf);
+    src: url(../font/VarelaRound-Regular.otf);
 }
 @font-face {
     font-family: font_five;
-    src: url(../fonts/Quicksand-Regular.ttf);
+    src: url(../font/Quicksand-Regular.ttf);
 }
 * { box-sizing: border-box; }
 body {
@@ -127,19 +127,32 @@ iframe {
     vertical-align: -8px;
 }
 .mdl-list {
+    position: relative;
     margin: 0px;
-    padding: 0px;
+    padding: 22px 0px 0px 0px;
 }
-.mdl-list__item-primary-content i {
-    margin-right: 16px;
+.mdl-list__item {
+    position: relative;
+    line-height: 40px;
 }
+.mdl-list__item--two-line {
+    position: relative;
+}
+.mdl-list__item-primary-content span{
+    margin-left: 56px;
+}
+.mdl-list__item-secondary-action i {
+    font-size: 1.7em;
+    vertical-align: -7px;
+}
+/*
 .mdl-list__item-secondary-content {
     padding-top: 5px;
 }
 .mdl-list__item-secondary-content i {
     margin: 0px auto;
 }
-.mdl-list__item-secondary-action {
+.setting-list .mdl-list__item-secondary-action {
     margin-right: 16px;
 }
 .mdl-card {
@@ -161,12 +174,55 @@ iframe {
 .mdl-card__actions .material-icons {
   padding-right: 10px;
 }
-#contact-search-box {
-    width: 100%;
+*/
+
+#search-box {
+    padding: 16px;
+    position: relative;
+}
+#search-box i {
+    font-size: 2.8em;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    color: #999;
+}
+#search-box i.active {
+    color: #2196F3;
+}
+#search-box input {
+    width: calc(100% - 56px);
+    height: 40px;
+    line-height: 24px;
     padding: 8px 16px;
     box-sizing: border-box;
     font-family: font_two;
     border: 1px solid #ccc;
+    font-size: 1.4em;
+}
+.privat-chat-list {
+    padding: 0px;
+}
+.contact-list i {
+    color: #999;
+}
+.contact-email {
+    display: none;
+}
+.pending-list i {
+    color: #e74c3c;
+}
+.request-list i {
+    color: #2ecc71;
+}
+.request-list,
+.pending-list,
+.search-list {
+    display: none;
+}
+.search-list p {
+    text-align: center;
+    padding: 10px;
 }
 .section-label {
     background-color: rgba(0,150,136,0.7);
@@ -176,6 +232,9 @@ iframe {
     padding: 1px 16px;
     font-size: 0.9em;
     font-family: font_five;
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
 .action-button {
     position: fixed;
@@ -321,20 +380,23 @@ iframe {
     bottom: 10px;
     left: 76px;
 }
+.profile-image,
 #profile-image {
-    height: 180px;
-    width: 180px;
+    height: 96px;
+    width: 96px;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
     margin: 0px auto;
     border: 2px solid #999;
 }
+.profile-name,
 #profile-name {
     padding: 0px 10px;
-    margin-bottom: 10px;
+    margin: 10px 0px 5px 0px;
+    word-break: break-all;
 }
-
+.profile-email,
 #profile-email {
     margin: 0px;
     font-size: 0.9em;
@@ -342,10 +404,65 @@ iframe {
 #menu {
     margin-left: 15px;
 }
-#chat-window {
+#window-chat {
     position: absolute;
     top: 0px;
     left: 100%;
+}
+.profile-img-thumbnail {
+    height: 40px;
+    width: 40px;
+    margin-right: 16px;
+    border: 2px solid #999;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    box-sizing: border-box;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+}
+.popup {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    display: none;
+}
+.popup-overlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0,0,0,0.7);
+    width: 100%;
+    height: 100%;
+}
+.popup-body {
+    position: absolute;
+    top: 15%;
+    left: 10%;
+    width: 80%;
+    height: auto;
+    min-height: 200px;
+    max-height: 70%;
+    background-color: #fff;
+    padding: 30px 20px;
+    overflow: auto;
+}
+.popup-feedback{
+    font-size: 0.85em;
+    margin-top: 5px;
+    display: none;
+}
+.set-contact {
+    display: none;
+    margin-top: 30px;
+}
+
+button i {
+    vertical-align: -6px !important;
 }
 
 

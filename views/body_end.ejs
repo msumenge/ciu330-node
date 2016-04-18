@@ -1,20 +1,8 @@
     <script src="<%= baseUrl %>socket.io/socket.io.js"></script>
-    <script src="<%= baseUrl %>js/jquery.mobile.custom.min.js"></script>
-    <script src="<%= baseUrl %>js/main.js"></script>
-
     <script>
-    // Socket.io
-    var socket = io();
-    socket.on('initApp', function(data) {
-        console.log(data);
-        var user_image = data.image == 'undefined' ? './img/user.png' : data.image;
+    // ----------------- GLOBAL VARIABLES --------------------
+    var socket = io();              // socket.io
         
-        $('#profile-image').css('background-image', 'url('+user_image+')');
-        $('#profile-name').text(data.name);
-        $('#profile-email').text(data.email);
-        
-    });
-    
     // Google APIs
     var auth2;
     var initClient = function() {
@@ -25,16 +13,18 @@
     
     		// Listen for changes to current user.
     		auth2.currentUser.listen(function (user) {
-                if (!user.isSignedIn()) {
-                    window.location.href = "<%= baseUrl %>signin";
-                } else {
+                if (auth2.isSignedIn.get()) {
                     var idToken = user.getAuthResponse().id_token;
                     var email = user.getBasicProfile().getEmail();
                     //console.log(user.getBasicProfile().getId());
                     
                     socket.emit('googleUser', { idToken: idToken, email: email });
+                } else {
+                    window.location.href = "<%= baseUrl %>signin";
                 }
             });
+            
+            
     	});
     };
     
@@ -46,6 +36,7 @@
     }
     </script>
     <script src="https://apis.google.com/js/platform.js?onload=initClient" async defer></script>
-    
+    <script src="<%= baseUrl %>js/jquery.mobile.custom.min.js"></script>
+    <script src="<%= baseUrl %>js/main.js"></script>
 </body>
 </html>

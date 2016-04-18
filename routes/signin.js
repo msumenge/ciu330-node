@@ -3,10 +3,11 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
     var data = {
-      title: 'CIU330',
+      title: req.app.get('appTitle'),
       baseUrl: req.app.get('baseUrl'),
       clientId: req.app.get('clientId'),
-      themeColor: req.app.get('themeColor')
+      themeColor: req.app.get('themeColor'),
+      themeColorRgba: req.app.get('themeColorRgba')
     };
     
     res.render('signin', data);

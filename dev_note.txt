@@ -5,13 +5,11 @@ var socket = io('https://ciu330-node-msumenge.c9users.io');
 -------------------------- GitHub ------------------------------
 git remote add origin git@github.com:yourname/yourrepository.git
 ----------------------------------------------------------------
-#commit
-
+#commit command
 git add .
 git commit -m "First commit"
 ----------------------------------------------------------------
-#push
-
+#push command
 git push -u origin master
 
 --------------------------- MySql ------------------------------
@@ -27,6 +25,9 @@ $ mysql-ctl cli
 # import data
 mysql> use c9
 mysql> source PATH_TO_SQL_FILE.sql
+
+# export table
+$ mysqldump c9 > c9.sql
 
 >>> https://gist.github.com/hofmannsven/9164408 <<<
 Access monitor: mysql -u [username] -p; (will prompt for password)
