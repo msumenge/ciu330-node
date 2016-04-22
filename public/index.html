@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>CUI330</title>
+    <link rel="icon" href="https://ciu330-node-msumenge.c9users.io/img/icon.png" type="image/png" /><!-- image/x-icon -->
+    
+    <!-- MDL -->
+    <link rel="stylesheet" href="https://ciu330-node-msumenge.c9users.io/css/material.min.css">
+    <script src="https://ciu330-node-msumenge.c9users.io/js/material.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- jQuery -->
+    <script src="https://ciu330-node-msumenge.c9users.io/js/jquery-2.2.2.min.js"></script>
+    
+    <!-- Site -->
+    <link rel="stylesheet" href="https://ciu330-node-msumenge.c9users.io/css/main.css">
+    
+    <!-- App -->
+    <meta name="theme-color" content="#2196F3">
+    <meta name="msapplication-navbutton-color" content="#2196F3">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#2196F3">
+    
+    <style>
+        .section-label {
+            background-color: rgba(33,150,243,0.7);
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="BODY"></div>
+    
+    <script src="https://ciu330-node-msumenge.c9users.io/socket.io/socket.io.js"></script>
+    <script>
+    // ----------------- GLOBAL VARIABLES --------------------
+    var socket = io();              // socket.io
+        
+    // Google APIs
+    var auth2;
+    var initClient = function() {
+        gapi.load('auth2', function() {
+                auth2 = gapi.auth2.init({
+                        client_id: '291259846069-jei8sh0n4bcs0mebh9biuse2uf065k52.apps.googleusercontent.com'
+                });
+    
+                // Listen for changes to current user.
+                auth2.currentUser.listen(function (user) {
+                if (auth2.isSignedIn.get()) {
+                    var idToken = user.getAuthResponse().id_token;
+                    var email = user.getBasicProfile().getEmail();
+                    //console.log(user.getBasicProfile().getId());
+                    
+                    socket.emit('googleUser', { idToken: idToken, email: email });
+                } else {
+                    window.location.href = "https://ciu330-node-msumenge.c9users.io/signin";
+                }
+            });
+            
+            
+        });
+    };
+    
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+            console.log('User signed out.');
+        });
+    }
+    </script>
+    <script src="https://apis.google.com/js/platform.js?onload=initClient" async defer></script>
+    <script src="https://ciu330-node-msumenge.c9users.io/js/jquery.mobile.custom.min.js"></script>
+    <script src="https://ciu330-node-msumenge.c9users.io/js/main.js"></script>
+</body>
+</html>

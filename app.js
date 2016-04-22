@@ -310,6 +310,7 @@ app.get('/', function(req, res, next) {
   
   res.render('index', data, function(e, html) {
     res.send(html);
+    //console.log(html);
     //res.send(200);
   });
 });
