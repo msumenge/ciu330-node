@@ -1,0 +1,87 @@
+<%- include('body_start') %>
+
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+        <div class="back-button">
+            <a href="<%= baseUrl %>">
+                <i class="material-icons">arrow_back</i>
+            </a>
+        </div>
+        <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title">Title</span>
+            <div class="mdl-layout-spacer"></div>
+            <button id="chat-options" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
+            <i class="material-icons">more_vert</i>
+            </button>
+            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                for="chat-options">
+                <li class="mdl-menu__item">Some Action</li>
+                <li class="mdl-menu__item">Another Action</li>
+                <li disabled class="mdl-menu__item">Disabled Action</li>
+                <li class="mdl-menu__item">Yet Another Action</li>
+            </ul>
+        </div>
+    </header>
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <div class="msg-from me fullwidth">
+                <div class="bg-cover"></div>
+                <div class="msg-time">10:27 am</div>
+                <div>Some text message</div>
+            </div>
+            <div class="msg-from other fullwidth">
+                <div class="bg-cover"></div>
+                <div class="msg-time">10:27 am</div>
+                <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</div>
+            </div>
+            
+            <textarea id="input-text" placeholder="Type something here"></textarea>
+            
+            <!--div id="input-canvas">
+                <canvas id="canvas"></canvas>
+                <div>
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                        <i class="material-icons">send</i>
+                    </button>
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                        <i class="material-icons">undo</i>
+                    </button>
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                        <i class="material-icons">delete</i>
+                    </button>
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                        <i class="material-icons">brush</i>
+                    </button>
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                        <i class="material-icons">color_lens</i>
+                    </button>
+                </div>
+            </div-->
+            
+            <!--div id="input-location" class="bg-cover" style="background-image: url('http://maps.googleapis.com/maps/api/staticmap?center=-27.4995676,152.9889577&zoom=16&size=350x250&sensor=false');">
+                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                    <i class="material-icons">send</i>
+                </button>
+                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                    <i class="material-icons">refresh</i>
+                </button>
+            </div-->
+            
+            <!--div id="input-image" class="bg-cover" style="background-image: url('http://maps.googleapis.com/maps/api/staticmap?center=-27.4995676,152.9889577&zoom=16&size=350x250&sensor=false');">
+                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                    <i class="material-icons">send</i>
+                </button>
+                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                    <i class="material-icons">file_upload</i>
+                </button>
+            </div-->
+            
+            
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored chat-option-button">
+                <i class="material-icons">keyboard_arrow_up</i>
+            </button>
+        </div>
+    </main>
+</div>
+
+<%- include('body_end') %>

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2016 at 10:43 PM
+-- Generation Time: Apr 18, 2016 at 05:49 PM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.3
 
@@ -21,6 +21,52 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `c9` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `c9`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chat_member`
+--
+
+DROP TABLE IF EXISTS `chat_member`;
+CREATE TABLE IF NOT EXISTS `chat_member` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `user_id` int(255) NOT NULL,
+  `chat_session_id` int(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chat_message`
+--
+
+DROP TABLE IF EXISTS `chat_message`;
+CREATE TABLE IF NOT EXISTS `chat_message` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `sender_id` int(255) NOT NULL,
+  `chat_session_id` int(255) NOT NULL,
+  `time_created` datetime NOT NULL,
+  `time_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `read_count` tinyint(255) NOT NULL DEFAULT '0',
+  `message` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chat_session`
+--
+
+DROP TABLE IF EXISTS `chat_session`;
+CREATE TABLE IF NOT EXISTS `chat_session` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `time_created` datetime NOT NULL,
+  `uudi` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 

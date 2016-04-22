@@ -55,8 +55,13 @@ $('#new-chat-button').on('click', function() {
 
 */
 
-socket.on('initApp', function(data) {
-    app.init(data);
+socket.on('setUser', function(data) {
+    app.setUser(data);
+    app.reqPage();
+});
+
+socket.on('resPage', function(data) {
+    app.renderPage(data);
 });
 
 socket.on('resultPeople', function(data) {
@@ -73,25 +78,50 @@ socket.on('refreshContactList', function(data) {
 
 // MODULES
 var app = {
+    $body : $('#BODY'), 
     client : {},
     searchContactResult : {},
-    selectedUser: {},
+    selectedUser : {},
     init : function(data) {
         
-        this.cacheDom();
-        this.bindEvents();
-        this.setClient(data);
-        this.renderContactList();
-    
-        this.$profileImage.css('background-image', 'url('+this.client.picture+')');
-        this.$profileName.text(this.client.name);
-        this.$profileEmail.text(this.client.email);
     },
-    cacheDom : function () {
+    reqPage : function(url){
+        if (typeof(url)==='undefined') url = '/';
+        socket.emit('reqPage', { url: url });
+    },
+    renderPage : function (data) {
+        
+        // set contents
+        app.$body.empty().html(data.html);
+        
+        // bind events
+        switch(data.url) {
+          case '/': 
+            this.cacheIndexDom();
+            this.bindIndexEvents();
+            this.renderContactList();
+            
+            this.$profileImage.css('background-image', 'url('+this.client.picture+')');
+            this.$profileName.text(this.client.name);
+            this.$profileEmail.text(this.client.email);
+            break;
+        case '/chat': 
+            this.cacheChatDom();
+            this.bindChatEvents();
+            //this.renderConversation();
+            break;
+        }
+        
+        // Init MDL
+        componentHandler.upgradeDom();
+    },
+    cacheIndexDom : function () {
         this.$drawer = $('.mdl-layout__drawer');
         this.$profileImage = this.$drawer.find('#profile-image');
         this.$profileName = this.$drawer.find('#profile-name');
         this.$profileEmail = this.$drawer.find('#profile-email');
+        
+        this.$tab = $('.mdl-layout__tab');
         
         this.$popup = $('#popup');
         this.$popupOverlay = this.$popup.find('.popup-overlay');
@@ -123,19 +153,59 @@ var app = {
 
         this.$soundPing = $('#sound-ping')[0];
     },
-    bindEvents : function () {
+    bindIndexEvents : function () {
         this.$popupOverlay.on('click', this.hidePopup.bind(this));
         this.$searchIcon.on('click', this.toggleSearchContact.bind(this));
         this.$setContact.on('click', this.setContact.bind(this));
-        this.$searchList.on('click', '.mdl-list__item', this.showPopup.bind(this));
-        this.$contactList.on('click', 'i', this.showPopup.bind(this));
-        this.$pendingList.on('click', '.mdl-list__item', this.showPopup.bind(this));
-        this.$pendingList.on('click', 'i', this.contactShortcut.bind(this));
-        this.$requestList.on('click', '.mdl-list__item', this.showPopup.bind(this));
-        this.$requestList.on('click', 'i', this.contactShortcut.bind(this));
+        this.$searchList.on('click', '.mdl-list__item', this.renderPopup.bind(this));
+        this.$contactList.on('click', '.mdl-list__item', this.openChat.bind(this));
+        this.$contactList.on('click', 'i', this.renderPopup.bind(this));
+        this.$pendingList.on('click', '.mdl-list__item', this.renderPopup.bind(this));
+        this.$pendingList.on('click', 'i', this.setContactShortcut.bind(this));
+        this.$requestList.on('click', '.mdl-list__item', this.renderPopup.bind(this));
+        this.$requestList.on('click', 'i', this.setContactShortcut.bind(this));
         this.$searchInput.on('keyup', this.searchContact.bind(this));
+        this.$tab.on('click', this.unsetNotification.bind(this))
     },
-    setClient : function (data) {
+    cacheChatDom : function () {
+        this.$backBtn = $('#back-btn');
+        this.$inputOptBtn = $('#input-option');
+        this.$inputOptsBtn = $('.input-option');
+    },
+    bindChatEvents : function () {
+        this.$backBtn.on('click', this.openHome.bind(this));
+        this.$inputOptBtn.on('click', this.showChatOpt.bind(this));
+    },
+    renderConversation : function () {
+        
+    },
+    showChatOpt : function () {
+        
+        var isActive = this.$inputOptBtn.hasClass('active');
+        
+        if (isActive) {
+            this.$inputOptBtn.removeClass('active');
+            
+            this.$inputOptsBtn.each(function (key, val) {
+                setTimeout(function(){
+                    $(val).css('right', '-50px');
+                }, 50*key);
+            });
+        }
+        
+        //
+        else {
+            this.$inputOptBtn.addClass('active');
+            
+            this.$inputOptsBtn.each(function (key, val) {
+                
+                setTimeout(function(){
+                    $(val).css('right', '10px');
+                }, 50*key);
+            });
+        }
+    },
+    setUser : function (data) {
         if (typeof(data)==='undefined') return false;
         
         // set data
@@ -166,6 +236,7 @@ var app = {
                         template = '<div class="mdl-list__item" data-userId="'+val.id+'"><input type="text" value=\''+JSON.stringify(val)+'\' hidden /><span class="mdl-list__item-primary-content"><div class="bg-cover profile-img-thumbnail" style="background-image: url('+val.picture+');"></div><span>'+val.name+'</span></span><span class="mdl-list__item-secondary-content"><a class="mdl-list__item-secondary-action" href="#"><i class="material-icons" data-shortcut="2">check_circle</i></a></span></div>';
                         
                         app.$requestList.append(template).show();
+                        app.updateBadge('.mdl-layout__tab:nth-child(3) i', 1);
                     }
                         
                     break;
@@ -176,7 +247,13 @@ var app = {
             }
         });
     },
-    showPopup : function (e) {
+    openChat : function () {
+        this.reqPage('/chat');
+    },
+    openHome : function () {
+        this.reqPage();
+    },
+    renderPopup : function (e) {
         
         if (typeof(e) !== 'undefined') {
             e.preventDefault();
@@ -186,6 +263,7 @@ var app = {
         // add userId to searched profile
         if(typeof(this.selectedUser.contact_status_id)==='undefined') {
             this.selectedUser.userId = this.selectedUser.id;
+            this.selectedUser.contact_status_id = 0;
         }
         
         this.client.contact.forEach(function(val, key, arr) {
@@ -209,13 +287,11 @@ var app = {
         this.$unblockContactBtn.hide();
         this.$popupFeedback.hide();
         
+        console.log(this.selectedUser);
+        
         if (this.selectedUser.sender_id == this.client.id) {
             
             switch(this.selectedUser.contact_status_id) {
-                case 0:
-                    this.$addContactBtn.show();
-                    this.$blockContactBtn.show();
-                    break;
                 case 1: // pending
                     this.$blockContactBtn.show();
                     this.$cancelContactBtn.show();
@@ -230,6 +306,10 @@ var app = {
                     break;
                 case 4: // blocked
                     this.$unblockContactBtn.show();
+                    break;
+                default:
+                    this.$addContactBtn.show();
+                    this.$blockContactBtn.show();
                     break;
             }
         }
@@ -249,21 +329,17 @@ var app = {
                     break;
                 case 4:
                     break;
+                default:
+                    this.$addContactBtn.show();
+                    this.$blockContactBtn.show();
+                    break;
             }
         } else {
             console.log('Not In Contact List'); //return;
             
-            this.$addContactBtn.hide();
-            this.$acceptContactBtn.hide();
-            this.$declineContactBtn.hide();
-            this.$blockContactBtn.hide();
-            this.$cancelContactBtn.hide();
-            this.$removeContactBtn.hide();
-            this.$unblockContactBtn.hide();
-            this.$popupFeedback.hide();
-            
             this.$addContactBtn.show();
             this.$blockContactBtn.show();
+
         }
         
         this.$popup.show();
@@ -286,18 +362,18 @@ var app = {
         if (typeof(target)==='undefined') return false;
         if (typeof(val)==='undefined') return false;
         
-        // int type of val
-        var num_val = parseInt(val.substring(1));
-        
         //calculate badge
-        var badge_count = val.charAt(0) == '+' ? parseInt($(target).data('badge')) + num_val : parseInt($(target).data('badge')) - num_val;
+        var badge_count = val == 0 ? 0 : parseInt($(target).data('badge')) + val;
+        
+        console.log(badge_count);
         
         //hide badge if empty
         if (badge_count <= 0) {
+            
             $(target)
                 .removeClass('mdl-badge')
-                .attr('data-badge', badge_count)
-                .data('badge', badge_count);
+                .attr('data-badge', 0)
+                .data('badge', 0);
         } 
         //show badge
         else {
@@ -312,14 +388,21 @@ var app = {
         
         switch (data.type) {
             case 'contact-add':
-                this.updateBadge('.mdl-layout__tab:nth-child(3) i', '+1');
+                //this.updateBadge('.mdl-layout__tab:nth-child(3) i', 1);
                 this.vibrate();
                 this.playSound();
                 break;
             case 'contact-cancel':
-                this.updateBadge('.mdl-layout__tab:nth-child(3) i', '-1');
+                this.updateBadge('.mdl-layout__tab:nth-child(3) i', -1);
+                this.selectedUser.contact_status_id = 0;
+                if (this.$popup.css('display') == 'block') {
+                    this.renderPopup();
+                }
                 break;
         }
+    },
+    unsetNotification : function (e) {
+        this.updateBadge($(e.target).closest('.mdl-layout__tab').find('i'), 0);
     },
     setContact : function (e) {
         
@@ -331,10 +414,41 @@ var app = {
             statusId: $(e.target).closest('button').data('contact-status-id')
         });
         
+        this.selectedUser.contact_status_id = $(e.target).closest('button').data('contact-status-id');
+        
+        // re-render pop up
+        if (this.$popup.css('display') == 'block') {
+            this.renderPopup();
+        }
+        
+        // subtract 1 notif if contact is "Accepted"
+        if (parseInt($(e.target).closest('button').data('contact-status-id')) == 2) {
+            app.updateBadge('.mdl-layout__tab:nth-child(3) i', -1);
+        }
+        
+    },
+    setContactShortcut : function (e) {
+        // stop parent event
+        e.stopPropagation();
+        
+        var userData = $(e.target).closest('.mdl-list__item').find('input').val();
+        this.selectedUser = JSON.parse(userData);
+        console.log(userData);
+        
+        socket.emit('setContact', {
+            sender: this.client.id,
+            senderEmail: this.client.email,
+            receiver: this.selectedUser.userId,
+            receiverEmail: this.selectedUser.email,
+            statusId: $(e.target).data('shortcut')
+        });
+        
+        // subtract 1 notif if contact is "Accepted"
+        if (parseInt($(e.target).data('shortcut')) == 2) {
+            app.updateBadge('.mdl-layout__tab:nth-child(3) i', -1);
+        }
     },
     searchContact : function () {
-    
-        
         
         // search database
         if(this.$searchIcon.hasClass('active')) {
@@ -388,8 +502,6 @@ var app = {
             this.searchContactResult.forEach(function(val, key, arr) {
                 if(val.id == app.client.id) return;
                 
-                console.log(val);
-                
                 var template = '<div class="mdl-list__item"><input type="text" value=\''+JSON.stringify(val)+'\' hidden /><span class="mdl-list__item-primary-content"><div class="bg-cover profile-img-thumbnail" style="background-image: url('+val.picture+');"></div><span>'+val.name+'</span></span></div>';
 
                 app.$searchList.append(template);
@@ -400,25 +512,8 @@ var app = {
         this.client.contact = JSON.parse(data);
         this.renderContactList();
         if (this.$popup.css('display') == 'block') {
-            //delete this.selectedUser.contact_status_id;
-            this.showPopup();
+            this.renderPopup();
         }
-    },
-    contactShortcut : function (e) {
-        // stop parent event
-        e.stopPropagation();
-        
-        var userData = $(e.target).closest('.mdl-list__item').find('input').val();
-        this.selectedUser = JSON.parse(userData);
-        console.log(userData);
-        
-        socket.emit('setContact', {
-            sender: this.client.id,
-            senderEmail: this.client.email,
-            receiver: this.selectedUser.userId,
-            receiverEmail: this.selectedUser.email,
-            statusId: $(e.target).data('shortcut')
-        });
     },
     vibrate : function (duration) {
         if (typeof(duration)==='undefined') duration = 500;

@@ -29,12 +29,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.set('env', 'production');
 app.set('appTitle', 'CUI330');
 app.set('baseUrl', 'https://ciu330-node-msumenge.c9users.io/');
-app.set('clientId', '269848732222-ql3iegev0uv7jrrl30b544cvjq17ihlb');
+app.set('clientId', '291259846069-jei8sh0n4bcs0mebh9biuse2uf065k52');
 app.set('themeColor', '#2196F3');
 app.set('themeColorRgba', js.hexToRgb(app.set('themeColor'), '0.7'));
-
-var clients = {};
-var socketRef = {};
 
 // =============================== MySql ================================
 // ======================================================================
@@ -66,24 +63,33 @@ function generateUser (x) {
   }
 }
 
-//generateUser();
+//generateUser(20);
 
 // ============================= Socket.io ==============================
 // ======================================================================
 
 var io = require('socket.io').listen(server);
 io.on('connection', function(socket){
-  var socketNum = socket.id; //String(socket.id).slice(2);
+  //var socketID = socket.id; //String(socket.id).slice(2);
   
   socket.on('disconnect', function(){
-    console.log('Client ' + socketNum +' disconnected');
+    console.log('Client ' + socket.id +' disconnected');
     
-    // remove client from user list
-    delete socketRef[socketNum];
+    // remove client from clients and socketRef
+    console.log(js.socketRef);
+    if (typeof(js.socketRef[socket.id])!=='undefined') {
+      
+      // IMPORTANT ___________________________________
+      // check if client is loged in on mutiple device
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      console.log(delete js.clients[js.socketRef[socket.id].charAt(0)][js.socketRef[socket.id]]);
+      console.log(delete js.socketRef[socket.id]);
+    }
   });
   
   // show client number
-  console.log('Client ' + socketNum +' connected');
+  console.log('Client ' + socket.id +' connected');
+  
   
   socket.on('googleUser', function(data) {
         // validate token
@@ -119,10 +125,16 @@ io.on('connection', function(socket){
                   var q = 'SELECT * FROM user WHERE id = "' + r.insertId + '"';
                   db.query(q, function (e, r, f) {
                     var userData = r[0];
-                    clients[userData.email] = userData;
-                    socketRef[socketNum] = userData.email;
+                    userData.contact = {};
                     
-                    socket.emit('initApp', userData);
+                    var index = userData.email.charAt(0);
+                    if (typeof(js.clients[index])==='undefined') {
+                      js.clients[index] = {};
+                    }
+                    js.clients[index][userData.email] = userData;
+                    js.socketRef[socket.id] = userData.email;
+                    
+                    socket.emit('setUser', userData);
                   });
                 });
               }
@@ -140,19 +152,22 @@ io.on('connection', function(socket){
                   d = [google.email, google.sub];
                   db.query(q, d, function (e, r, f) {
                     var userData = r[0];
-                    clients[userData.email] = userData;
-                    socketRef[socketNum] = userData.email;
                     
+                    var index = userData.email.charAt(0);
+                    if (typeof(js.clients[index])==='undefined') {
+                      js.clients[index] = {};
+                    }
+                    js.clients[index][userData.email] = userData;
+                    js.socketRef[socket.id] = userData.email;
+
                     // get contact list
                     q = 'SELECT contact.*, u2.name AS name, u2.email AS email, u2.picture AS picture FROM contact JOIN user u2 ON u2.id = contact.receiver_id WHERE contact.sender_id=? UNION SELECT contact.*, u1.name AS name, u1.email AS email, u1.picture AS picture FROM contact JOIN user u1 ON u1.id = contact.sender_id WHERE contact.receiver_id=?';
                     d = [userData.id, userData.id];
                     db.query(q, d, function (e, r, f) {
                       userData.contact = r;
                       
-                      console.log(r);
-                      
                       // send data to client
-                      socket.emit('initApp', userData);
+                      socket.emit('setUser', userData);
                     });
                   });
                 });
@@ -173,6 +188,7 @@ io.on('connection', function(socket){
     });
   });
   
+  
   socket.on('setContact', function(data){
     
     //check if row exist
@@ -186,7 +202,6 @@ io.on('connection', function(socket){
       // update if data exist
       if (parseInt(r[0]['COUNT(id)']) > 0) {
         is_data_exists = true;
-        //console.log("Data is already exists");
       }
       
       switch (data.statusId) {
@@ -214,16 +229,13 @@ io.on('connection', function(socket){
           }
           break;
       }
-      
-      console.log(q);
-      console.log(d);
 
       // create contact request
       db.query(q, d, function (e, r, f) {
         if (e) throw e;
         
-        var sender = js.getSocketByEmail(socketRef, data.senderEmail);
-        var receiver = js.getSocketByEmail(socketRef, data.receiverEmail);
+        var sender   = js.getSocketByEmail(data.senderEmail);
+        var receiver = js.getSocketByEmail(data.receiverEmail);
         
         if (sender != false) {
           sender.forEach(function(val, key, arr) {
@@ -242,7 +254,7 @@ io.on('connection', function(socket){
         if (receiver != false) {
           
           receiver.forEach(function(val, key, arr) {
-            console.log(JSON.stringify(data));
+
             if (data.statusId == 0) {
               io.to(val).emit("notification", {type: 'contact-cancel'});
             } else if (data.statusId == 1) {
@@ -262,6 +274,22 @@ io.on('connection', function(socket){
         
       });
     });
+  });
+  
+  socket.on('reqPage', function(data){
+    
+    switch(data.url) {
+      case '/': 
+        app.render('home', {title: app.get('appTitle')}, function(e, html) {
+          socket.emit('resPage', { html: html, url: data.url });
+        });
+        break;
+      case '/chat': 
+        app.render('chat', {title: app.get('appTitle')}, function(e, html) {
+          socket.emit('resPage', { html: html, url: data.url });
+        });
+        break;
+    }
   });
   
 });
@@ -286,8 +314,34 @@ app.get('/', function(req, res, next) {
   });
 });
 
-// other pages
-app.use('/signin', require('./routes/signin'));
+// signin page
+app.use('/signin', function(req, res, next) {
+  
+  var data = {
+      title: req.app.get('appTitle'),
+      baseUrl: req.app.get('baseUrl'),
+      clientId: req.app.get('clientId'),
+      themeColor: req.app.get('themeColor'),
+      themeColorRgba: req.app.get('themeColorRgba')
+    };
+    
+    res.render('signin', data);
+  
+});
+
+// chat page
+app.use('/chat', function(req, res, next) {
+  
+  var data = {
+      title: req.app.get('appTitle'),
+      baseUrl: req.app.get('baseUrl'),
+      clientId: req.app.get('clientId'),
+      themeColor: req.app.get('themeColor'),
+      themeColorRgba: req.app.get('themeColorRgba')
+    };
+    
+    res.render('chat', data);
+});
 
 // ======================================================================
 // ======================================================================

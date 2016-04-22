@@ -17,17 +17,17 @@ git push -u origin master
 $ mysql-ctl start
 
 # stop MySQL
-$ mysql-ctl stop
+$ mysql-ctl stop;
 
 # run the MySQL interactive shell
 $ mysql-ctl cli
 
 # import data
-mysql> use c9
-mysql> source PATH_TO_SQL_FILE.sql
+mysql> use c9;
+mysql> source ./mysql/c9.sql;
 
 # export table
-$ mysqldump c9 > c9.sql
+$ mysqldump c9 > c9.sql;
 
 >>> https://gist.github.com/hofmannsven/9164408 <<<
 Access monitor: mysql -u [username] -p; (will prompt for password)
@@ -71,3 +71,12 @@ db.query(q, d, function (e, r, f) { //error , results, fields
   if (e) throw e;
   console.log('Inserted ID: ' + r.insertId + ', Num of affected rows: ' + r.affectedRows + ', Num of changed rows: '+ r.changedRows);
 });
+
+-----------------------------------------------------------------------
+
+sudo chmod 755 /etc/profile.d/cloud9.sh
+sudo chmod 755 /etc/profile.d/
+
+-----------------------------------------------------------------------
+
+https://www.openshift.com/

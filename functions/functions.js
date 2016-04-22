@@ -1,5 +1,8 @@
 module.exports = {
     
+    clients : {},
+    socketRef : {},
+    
     hexToRgb: function (hex, a) {
         //default value
         if (typeof(a)==='undefined') a = 1;
@@ -26,10 +29,10 @@ module.exports = {
         return d;
     },
     
-    getSocketByEmail: function(sockets, email){
+    getSocketByEmail: function(email){
         var result = [];
-        for(var key in sockets){
-            if(sockets[key] == email){
+        for(var key in this.socketRef){
+            if(this.socketRef[key] == email){
                 result.push(key);
             }
         }
