@@ -1,4 +1,4 @@
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-tabs">
     <header class="mdl-layout__header">
         <div class="back-button">
             <a href="#" id="back-btn">
@@ -6,23 +6,22 @@
             </a>
         </div>
         <div class="mdl-layout__header-row">
-            <span class="mdl-layout-title">Title</span>
+            <span class="mdl-layout-title"></span>
             <div class="mdl-layout-spacer"></div>
             <button id="chat-options" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
             <i class="material-icons">more_vert</i>
             </button>
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                 for="chat-options">
-                <li class="mdl-menu__item">Some Action</li>
-                <li class="mdl-menu__item">Another Action</li>
-                <li disabled class="mdl-menu__item">Disabled Action</li>
-                <li class="mdl-menu__item">Yet Another Action</li>
+                <li disabled class="mdl-menu__item">Add People</li>
+                <li disabled class="mdl-menu__item">End Chat</li>
+                <li disabled class="mdl-menu__item">Help</li>
             </ul>
         </div>
     </header>
-    <main class="mdl-layout__content">
-        <div class="page-content">
-            <div class="msg-from me fullwidth">
+    <main id="chat-window" class="mdl-layout__content animate">
+        <div id="chat-container" class="page-content">
+            <!--div class="msg-from me fullwidth">
                 <div class="bg-cover"></div>
                 <div class="msg-time">10:27 am</div>
                 <div>Some text message</div>
@@ -31,53 +30,60 @@
                 <div class="bg-cover"></div>
                 <div class="msg-time">10:27 am</div>
                 <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</div>
-            </div>
-            
+            </div-->
+        </div>
+        
+        <div id="input-container">    
             <div id="input-text">
                 <textarea placeholder="Type something here"></textarea>
-                <button class="send-btn mdl-button mdl-js-button mdl-button--icon">
+                <button class="send-btn mdl-button mdl-js-button mdl-button--icon" data-input="text">
                     <i class="material-icons">send</i>
                 </button>
             </div>
             
-            <!--div id="input-canvas">
+            <div id="input-canvas">
                 <canvas id="canvas"></canvas>
-                <div>
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                <div class="canvas-buttons">
+                    <button class="send-btn mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" data-input="canvas">
                         <i class="material-icons">send</i>
                     </button>
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" disabled>
                         <i class="material-icons">undo</i>
                     </button>
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                    <button class="canvas-delete mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
                         <i class="material-icons">delete</i>
                     </button>
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                    <button class="canvas-lineWidth mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
                         <i class="material-icons">brush</i>
                     </button>
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                    <button class="canvas-color mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
                         <i class="material-icons">color_lens</i>
                     </button>
                 </div>
-            </div-->
+                <input type="color" name="canvas-input-color" value="#354b60" class="off-screen" />
+                <div id="canvas-input-lineWidth" class="animate text-center">
+                    <div class="label">Line width</div>
+                    <input class="mdl-slider mdl-js-slider" type="range" min="1" max="10" value="2" tabindex="0">
+                </div>
+            </div>
             
-            <!--div id="input-location" class="bg-cover" style="background-image: url('http://maps.googleapis.com/maps/api/staticmap?center=-27.4995676,152.9889577&zoom=16&size=350x250&sensor=false');">
+            <div id="input-location" class="bg-contain" style="background-image: url('img/google_maps.png');">
                 <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
                     <i class="material-icons">send</i>
                 </button>
                 <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                    <i class="material-icons">refresh</i>
+                    <i class="material-icons">location_searching</i>
                 </button>
-            </div-->
+            </div>
             
-            <!--div id="input-image" class="bg-cover" style="background-image: url('http://maps.googleapis.com/maps/api/staticmap?center=-27.4995676,152.9889577&zoom=16&size=350x250&sensor=false');">
+            <div id="input-image" class="bg-cover" style="background-image: url('img/placeholder.png');">
                 <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
                     <i class="material-icons">send</i>
                 </button>
                 <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
                     <i class="material-icons">file_upload</i>
                 </button>
-            </div-->
+            </div>
             
             
             <button data-input="text" class="input-option animate mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
@@ -86,7 +92,7 @@
             <button data-input="canvas" class="input-option animate mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
                 <i class="material-icons">touch_app</i>
             </button>
-            <button data-input="file" class="input-option animate mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+            <button data-input="image" class="input-option animate mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
                 <i class="material-icons">photo</i>
             </button>
             <button data-input="location" class="input-option animate mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
@@ -101,6 +107,8 @@
 </div>
 
 <!--script>
+    ###################################################################
+    ###################################################################
     //input preview
     $('#file-prev, .input-file i').on('click', function () {
     	$('#file-input').click();
@@ -120,8 +128,9 @@
         readURL(this);
     });
     
-    
-    //Geolocation
+    ###################################################################
+    ###################################################################
+    //Geolocation 
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition, showError, {enableHighAccuracy: true});
@@ -156,116 +165,5 @@
         }
     }
     
-    //Canvas
-    var canvas = document.getElementById('canvas');
-    var context = canvas.getContext('2d');
-    
-    var radius = 2;
-    var dragging = false;
-    
-    var putPoint = function(e) {
-        if(dragging) {
-            var xPos = e.clientX - canvas.getBoundingClientRect().left;
-            var yPos = e.clientY - canvas.getBoundingClientRect().top;
-    
-            context.lineTo(xPos, yPos);
-            context.stroke();
-            context.beginPath();
-            context.arc(xPos, yPos, radius, 0, Math.PI*2);
-            context.fill();
-            context.beginPath();
-            context.moveTo(xPos, yPos);
-        }
-    }
-    
-    $('#canvas')
-        .on('mousedown vmousedown', function(e) {
-            dragging = true;
-            putPoint(e);
-    })
-        .on('mousemove vmousemove', function(e) {
-            putPoint(e);
-    })
-        .on('mouseup vmouseup', function() {
-            dragging = false;
-            context.beginPath();
-    });
-    
-    //clear canvas
-    function resetCanvas() {
-        canvas.width = $('#canvas').width();
-        canvas.height = $('#canvas').height();
-        context.lineWidth = radius*2;
-        context.fillStyle = '#354b60';
-        context.strokeStyle = '#354b60';
-        $('#canvas-opt-color i.fa').css('color', '#354b60');
-    }
-    $('#canvas-opt-clear').on('click', function() {
-        //if(confirm('Are you sure want to delete the drawing?')) {}
-        resetCanvas();
-    });
-    
-    //save canvas
-    /*
-        <?php
-    
-        $data = $_POST['image'];
-        $data = str_replace('data:image/png;base64,', '', $data);
-        $data = str_replace(' ', '+', $data);
-    
-        $img = base64_decode($data);
-        $path = '../images/' . uniqid() . '.png';
-        if(file_put_contents($path, $img))
-            echo $path;
-        else {
-            echo 'error';
-        }
-    
-    
-        //force browser to download
-        #header('Content-type: image/png');
-        #header('Content-disposition: attachment; filename=TheFileName.png');
-        #readfile($_GET['url']);
-    
-        ?>
-    */
-    $('#canvas-opt-save').on('click', function() {
-        var canvas_data = canvas.toDataURL();
-    
-        console.log(canvas_data);
-        
-        /*
-            $.ajax({
-                method: 'post',
-                url: "php/save_canvas.php",
-                data: 'image='+canvas_data,
-            }).success(function(feedback) {
-                console.log(feedback);
-            });
-        */
-    });
-    
-    //select color
-    $('#canvas-opt-color').on('click', function (e) {
-        $('#color-input').click();
-    });
-    
-    $('#color-input').on('change', function () {
-        var c = $(this).val();
-        $('#canvas-opt-color i.fa').css('color', c);
-        context.fillStyle = c;
-        context.strokeStyle = c;
-    });
-    
-    $('#canvas-opt-thickness').on('click', function() {
-        $('#brush-tickness-control').toggle();
-        radius = $('#brush-tickness-control input').val();
-        context.lineWidth = radius*2;
-    });
-    
-    $('#brush-tickness-control input').on('change mouseup vmouseup', function() {
-        $('#brush-tickness-control').hide();
-        radius = $(this).val();
-        context.lineWidth = radius*2;
-    });
+
 </script-->

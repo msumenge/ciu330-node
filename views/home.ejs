@@ -3,7 +3,7 @@
         <div class="mdl-layout__header-row">
             <span class="mdl-layout-title"><%= title %></span>
             <div class="mdl-layout-spacer"></div>
-            <button class="mdl-button mdl-js-button mdl-button--icon" onclick="javascript:signOut();">
+            <button class="mdl-button mdl-js-button mdl-button--icon" id="signout-btn">
                 <i class="material-icons">power_settings_new</i>
             </button>
             <button id="menu" class="mdl-button mdl-js-button mdl-button--icon">
@@ -11,20 +11,20 @@
             </button>
 
             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="menu">
-                <li class="mdl-menu__item">Some Action</li>
-                <li class="mdl-menu__item">Another Action</li>
-                <li disabled class="mdl-menu__item">Disabled Action</li>
-                <li class="mdl-menu__item">Yet Another Action</li>
+                <li disabled class="mdl-menu__item">Help</li>
+                <li disabled class="mdl-menu__item">Report bug</li>
+                <li disabled class="mdl-menu__item">Feedback</li>
+                <li disabled class="mdl-menu__item">Developer</li>
             </ul>
         </div>
         
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-            <a href="#fixed-tab-1" class="mdl-layout__tab">
-                <i class="material-icons mdl-badge--overlap" data-badge="0">person</i>
+            <a href="#fixed-tab-1" class="mdl-layout__tab is-active">
+                <i class="material-icons mdl-badge--overlap" data-badge="0">chat</i>
                 <!-- mdl-badge mdl-badge--overlap" data-badge="1"-->
             </a>
             <a href="#fixed-tab-2" class="mdl-layout__tab"><i class="material-icons mdl-badge--overlap" data-badge="0">people</i></a>
-            <a href="#fixed-tab-3" class="mdl-layout__tab is-active"><i class="material-icons mdl-badge--overlap" data-badge="0">contacts</i></a>
+            <a href="#fixed-tab-3" class="mdl-layout__tab"><i class="material-icons mdl-badge--overlap" data-badge="0">contacts</i></a>
             <a href="#fixed-tab-4" class="mdl-layout__tab"><i class="material-icons">settings</i></a>
         </div>
     </header>
@@ -35,15 +35,16 @@
         <div id="profile-email" class="text-center"></div>
     </div>
     <main class="mdl-layout__content">
-        <section class="mdl-layout__tab-panel" id="fixed-tab-1">
+        <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
             <div class="page-content">
                 
                 <button id="new-chat-button" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button mdl-button--colored">
                     <i class="material-icons">chat</i>
                 </button>
                 
-                <ul class="privat-chat-list mdl-list">
-                    <li class="mdl-list__item mdl-list__item--two-line">
+                <ul id="privat-chat-list" class="mdl-list">
+                    <!-- TEMPLATE -->
+                    <!--li class="mdl-list__item mdl-list__item--two-line">
                         <span class="mdl-list__item-primary-content">
                             <div class="bg-cover profile-img-thumbnail" style="background-image: url(./img/user.png);"></div>
                             <span>Bryan Cranston</span>
@@ -51,31 +52,9 @@
                         </span>
                         <span class="mdl-list__item-secondary-content">
                             <span class="mdl-list__item-secondary-info">12:54&nbsp;pm</span>
-                            <i class="material-icons">check</i><!--a class="mdl-list__item-secondary-action" href="#"></a-->
+                            <i class="material-icons">check</i><a class="mdl-list__item-secondary-action" href="#"></a>
                         </span>
-                    </li>
-                    <li class="mdl-list__item mdl-list__item--two-line">
-                        <span class="mdl-list__item-primary-content">
-                            <div class="bg-cover profile-img-thumbnail" style="background-image: url(./img/user.png);"></div>
-                            <span>Bryan Cranston</span>
-                            <span class="mdl-list__item-sub-title">62 Episodes asd asd asdsad asd</span>
-                        </span>
-                        <span class="mdl-list__item-secondary-content">
-                            <span class="mdl-list__item-secondary-info">12:54&nbsp;pm</span>
-                            <i class="material-icons">check</i><!--a class="mdl-list__item-secondary-action" href="#"></a-->
-                        </span>
-                    </li>
-                    <li class="mdl-list__item mdl-list__item--two-line">
-                        <span class="mdl-list__item-primary-content">
-                            <div class="bg-cover profile-img-thumbnail" style="background-image: url(./img/user.png);"></div>
-                            <span>Bryan Cranston</span>
-                            <span class="mdl-list__item-sub-title">62 Episodes asd asd asdsad asd</span>
-                        </span>
-                        <span class="mdl-list__item-secondary-content">
-                            <span class="mdl-list__item-secondary-info">12:54&nbsp;pm</span>
-                            <i class="material-icons">check</i><!--a class="mdl-list__item-secondary-action" href="#"></a-->
-                        </span>
-                    </li>
+                    </li-->
                 </ul>
                 
             </div>
@@ -85,39 +64,10 @@
                 <div class="mdl-grid">
                     
                     <div class="mdl-cell mdl-cell--2-col-phone">
-                        <div class="mdl-card">
-                            <div class="mdl-card__title">
-                                <i class="material-icons md-36">android</i>
-                            </div>
-                            <div class="mdl-card__actions">
+                        <div class="group-item">
+                            <div class="group-img bg-cover"></div>
+                            <div class="group-name">
                                 <span>Group chat</span>
-                                <div class="mdl-layout-spacer"></div>
-                                <i class="material-icons">notifications</i>
-                                <!-- notifications_off, notifications_active -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mdl-cell mdl-cell--2-col-phone">
-                        <div class="mdl-card">
-                            <div class="mdl-card__title">
-                                <i class="material-icons md-36">motorcycle</i>
-                            </div>
-                            <div class="mdl-card__actions">
-                                <span>Group chat</span>
-                                <div class="mdl-layout-spacer"></div>
-                                <i class="material-icons">notifications_active</i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mdl-cell mdl-cell--2-col-phone">
-                        <div class="mdl-card">
-                            <div class="mdl-card__title">
-                                <i class="material-icons md-36">cloud</i>
-                            </div>
-                            <div class="mdl-card__actions">
-                                <span>12346758912</span>
-                                <div class="mdl-layout-spacer"></div>
-                                <i class="material-icons">notifications_off</i>
                             </div>
                         </div>
                     </div>
@@ -125,7 +75,7 @@
                 </div>
             </div>
         </section>
-        <section class="mdl-layout__tab-panel is-active" id="fixed-tab-3">
+        <section class="mdl-layout__tab-panel" id="fixed-tab-3">
             <div class="page-content">
                 <!--button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect action-button mdl-button--colored">
                     <i class="material-icons">person_add</i>
@@ -241,6 +191,7 @@
     Your browser does not support the audio element.
 </audio>
 
+<!--script src=".js/material.min.js"></script-->
 <!--script>
 var fullScreen = false;
     // Find the right method, call on correct element

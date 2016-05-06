@@ -1,74 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title><%= title %></title>
-    <link rel="icon" href="<%= baseUrl %>img/icon.png" type="image/png" /><!-- image/x-icon -->
-    
-    <!-- MDL -->
-    <link rel="stylesheet" href="<%= baseUrl %>css/material.min.css">
-    <script src="<%= baseUrl %>js/material.min.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <!-- jQuery -->
-    <script src="<%= baseUrl %>js/jquery-2.2.2.min.js"></script>
-    
-    <!-- Site -->
-    <link rel="stylesheet" href="<%= baseUrl %>css/main.css">
-    
-    <!-- App -->
-    <meta name="theme-color" content="<%= themeColor %>">
-    <meta name="msapplication-navbutton-color" content="<%= themeColor %>">
-    <meta name="apple-mobile-web-app-status-bar-style" content="<%= themeColor %>">
-    
-    <!-- Google APIs -->
-    <meta name="google-signin-client_id" content="<%= clientId %>.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    
-    <style>
-        .abcRioButton.abcRioButtonBlue {
-            width: 100% !important;
-        }
-        #logo {
-            width: 50%;
-            height: auto;
-            margin: 10px 25%;
-        }
-        h2 {
-          padding: 40px 0px 10px 0px;
-          margin: 0px;
-        }
-        iframe { display: none; }
-    </style>
-
-  </head>
-  <body>
-    <h2 class="text-center"><%= title %></h2>
-    <img src="<%= baseUrl %>img/icon.png" alt="<%= title %>" id="logo" />
-    <div class="mdl-grid">
-        <div class="mdl-cell mdl-cell--4-col-phone">
-            <div class="g-signin2"
-                data-scope="profile email"
-                data-onsuccess="onSignIn"
-                data-onfailure="onFailure"
-                data-theme="dark"
-                data-width="300"
-                data-height="50"
-                data-longtitle="true">
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function onSignIn(googleUser) {
-            window.location.href = "<%= baseUrl %>";
-        }
-        
-        function onFailure(error) {
-            console.log(error);
-        }
-    </script>
-  </body>
-</html>
+<style>
+    .abcRioButton.abcRioButtonBlue {
+        width: 100% !important;
+    }
+    #logo {
+        width: 60%;
+        height: auto;
+        margin: 10px 20% 50px 20%;
+    }
+    h2 {
+      padding: 40px 0px 10px 0px;
+      margin: 0px;
+    }
+    iframe { display: none; }
+</style>
+<h2 class="text-center">Delta</h2>
+<img src="img/icon.png" alt="Delta" id="logo" />
+<div style="padding: 16px;">
+   <div id="g-signin2" class="g-signin2"
+    data-scope="profile email"
+    data-onsuccess="onSuccess"
+    data-onfailure="onFailure"
+    data-theme="dark"
+    data-width="300"
+    data-height="50"
+    data-longtitle="true"></div>
+</div>

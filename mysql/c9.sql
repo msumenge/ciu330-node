@@ -64,7 +64,7 @@ DROP TABLE IF EXISTS `chat_session`;
 CREATE TABLE IF NOT EXISTS `chat_session` (
   `id` int(255) NOT NULL AUTO_INCREMENT,
   `time_created` datetime NOT NULL,
-  `uudi` varchar(255) NOT NULL,
+  `uuid` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

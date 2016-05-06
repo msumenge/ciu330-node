@@ -35,8 +35,8 @@ Show all databases: show databases;
 Access database: mysql -u [username] -p [database] (will prompt for password)
 Create new database: create database [database];
 Select database: use [database];
-Show all tables: show tables;
-Show table structure: describe [table];
+---Show all tables: show tables;
+---Show table structure: describe [table];
 Create new table with columns: CREATE TABLE [table] ([column] VARCHAR(120), [another-column] DATETIME);
 Adding a column: ALTER TABLE [table] ADD COLUMN [column] VARCHAR(120);
 Adding a column with an unique, auto-incrementing ID: ALTER TABLE [table] ADD COLUMN [column] int NOT NULL AUTO_INCREMENT PRIMARY KEY;
@@ -55,7 +55,7 @@ Select a range: SELECT * FROM [table] WHERE [column] BETWEEN [value1] and [value
 Select with custom order and only limit: SELECT * FROM [table] WHERE [column] ORDER BY [column] ASC LIMIT [value]; (Order: DESC, ASC)
 Updating records: UPDATE [table] SET [column] = '[updated-value]' WHERE [column] = [value];
 Deleting records: DELETE FROM [table] WHERE [column] = [value];
-Delete all records from a table (without dropping the table itself): DELETE FROM [table]; (This also resets the incrementing counter for auto generated columns like an id column.)
+---Delete all records from a table (without dropping the table itself): DELETE FROM [table]; (This also resets the incrementing counter for auto generated columns like an id column.)
 Removing table columns: ALTER TABLE [table] DROP COLUMN [column];
 Deleting tables: DROP TABLE [table];
 Deleting databases: DROP DATABASE [database];
@@ -80,3 +80,6 @@ sudo chmod 755 /etc/profile.d/
 -----------------------------------------------------------------------
 
 https://www.openshift.com/
+
+//security.google.com/settings/security/permissions
+https://github.com/valenzia10/PhonegapGoogleLogin

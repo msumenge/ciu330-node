@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- APP -->
+    <meta name="theme-color" content="<%= themeColor %>">
+    <meta name="msapplication-navbutton-color" content="<%= themeColor %>">
+    <meta name="apple-mobile-web-app-status-bar-style" content="<%= themeColor %>">
+    
+    <title><%= title %></title>
+    <link rel="icon" href="img/icon.png" type="image/png" /><!-- image/x-icon -->
+    
+    <!-- MDL -->
+    <link rel="stylesheet" href="css/material.min.css">
+    <script src="js/material.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- jQuery -->
+    <script src="js/jquery-2.2.2.min.js"></script>
+    <script src="js/jquery.mobile.custom.min.js"></script>
+    
+    <!-- Google APIs -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="<%= clientId %>.apps.googleusercontent.com">
+    
+    <!-- Socket.io -->
+    <script src="js/socket.io.js"></script>
+    
+    <!-- Site -->
+    <link rel="stylesheet" href="css/main.css">
+    
+    <style>
+        .section-label {
+            background-color: <%= themeColorRgba %>;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="BODY"></div>
+
+    <script src="js/main.js"></script>
+    <script>
+    
+    var auth2;
+    gapi.load('auth2', function(){
+        auth2 = gapi.auth2.init({
+            client_id: '<%= clientId %>.apps.googleusercontent.com'
+        });
+        
+        // signed in
+        if (auth2.isSignedIn.get()) {
+            app.reqPage();
+            //auth2.signIn();
+        }
+        
+        // not signed in
+        else {
+            app.reqPage('/signin');
+            alert();
+        }
+        
+        // Listen for sign-in state changes.
+        auth2.isSignedIn.listen(function (val) {
+            console.log('Signin state changed to ', val);
+        });
+    });
+    </script>
+    
+</body>
+</html>
