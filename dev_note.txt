@@ -1,6 +1,14 @@
+** NODEMON **
+TO START: $ nodemon app.js
+TO STOP: press Ctrl + c
+
+** FOREVER **
+TO START: $ forever start app.js
+TO STOP: forever stop app.js
+----------------------------------------------------------------
 https://ciu330-node-msumenge.c9users.io
 ----------------------------------------------------------------
-var socket = io('https://ciu330-node-msumenge.c9users.io');
+var socket = io('https://delta-msumenge.c9users.io/');
 
 -------------------------- GitHub ------------------------------
 git remote add origin git@github.com:yourname/yourrepository.git

@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //app.set('env', 'production');
 app.set('appTitle', 'Delta');
-app.set('baseUrl', 'https://ciu330-node-msumenge.c9users.io/');
+app.set('baseUrl', 'https://delta-msumenge.c9users.io/');
 app.set('clientId', '291259846069-6qbl00ojehr061gbpb528ddss885eaqh');
 app.set('themeColor', '#2196F3');
 app.set('themeColorRgba', js.hexToRgb(app.set('themeColor'), '0.7'));
@@ -99,113 +99,112 @@ io.on('connection', function(socket){
 	
 	
 	socket.on('googleUser', function(data) {
-				// validate token
+		// validate token
 		request('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token='+data.idToken, function (error, response, body) {
-				// on success
-				if (!error && response.statusCode == 200) {
-						
-					var google = JSON.parse(body);
+			// on success
+			if (!error && response.statusCode == 200) {
 					
-					// adjust returned value
-					//google.picture = google.picture !== undefined ? 'external' : 'undefined';
-					//google.picture = google.picture !== undefined ? google.picture : 'undefined';
-					google.picture = google.picture !== undefined ? google.picture : './img/user.png';
-					google.email_verified = google.email_verified === 'true' ? 1 : 0;
+				var google = JSON.parse(body);
+				
+				// adjust returned value
+				//google.picture = google.picture !== undefined ? 'external' : 'undefined';
+				//google.picture = google.picture !== undefined ? google.picture : 'undefined';
+				google.picture = google.picture !== undefined ? google.picture : './img/user.png';
+				google.email_verified = google.email_verified === 'true' ? 1 : 0;
+				
+				// validate client and server user id
+				if (google.email == data.email) {
 					
-					// validate client and server user id
-					if (google.email == data.email) {
+					// check if user exists
+					var q = 'SELECT COUNT(id) FROM user WHERE email = "' + google.email + '" AND google_id = "' + google.sub+ '"';
+					db.query(q, function (e, r, f) {
 						
-						// check if user exists
-						var q = 'SELECT COUNT(id) FROM user WHERE email = "' + google.email + '" AND google_id = "' + google.sub+ '"';
-						db.query(q, function (e, r, f) {
+						// user does not exists
+						if (r[0]['COUNT(id)'] == 0) {
 							
-							// user does not exists
-							if (r[0]['COUNT(id)'] == 0) {
+							
+							// insert new user
+							var q = 'INSERT INTO user (email, name, google_id, picture, is_active) VALUES (?, ?, ?, ?, ?)';
+							var d = [google.email, google.name, google.sub, google.picture, google.email_verified];
+							db.query(q, d, function (e, r, f) {
+								if (e) throw e;
 								
-								
-								// insert new user
-								var q = 'INSERT INTO user (email, name, google_id, picture, is_active) VALUES (?, ?, ?, ?, ?)';
-								var d = [google.email, google.name, google.sub, google.picture, google.email_verified];
-								db.query(q, d, function (e, r, f) {
-									if (e) throw e;
+								var q = 'SELECT * FROM user WHERE id = "' + r.insertId + '"';
+								db.query(q, function (e, r, f) {
+									var userData = {};
+									userData.profile = r[0];
+									userData.contacts = {};
+									userData.chats = {};
 									
-									var q = 'SELECT * FROM user WHERE id = "' + r.insertId + '"';
-									db.query(q, function (e, r, f) {
-										var userData = {};
-										userData.profile = r[0];
-										userData.contacts = {};
-										userData.chats = {};
-										
-										var index = userData.profile.email.charAt(0);
-										if (typeof(js.clients[index])==='undefined') {
-											js.clients[index] = {};
-										}
-										js.clients[index][userData.profile.email] = userData.profile;
-										js.socketRef[socket.id] = userData.profile.email;
-										
-										socket.emit('setUser', userData);
-									});
+									var index = userData.profile.email.charAt(0);
+									if (typeof(js.clients[index])==='undefined') {
+										js.clients[index] = {};
+									}
+									js.clients[index][userData.profile.email] = userData.profile;
+									js.socketRef[socket.id] = userData.profile.email;
+									
+									socket.emit('setUser', userData);
 								});
-							}
-							
-							// existing user
-							else {
-								// update user info
-								var q = 'UPDATE user SET email = ?, name = ?, google_id = ?, picture = ?, is_active = ? WHERE email = ? AND google_id = ?';
-								var d = [google.email, google.name, google.sub, google.picture, google.email_verified, google.email, google.sub];
-								db.query(q, d, function (e, r, f) {
-									if (e) throw e;
+							});
+						}
+						
+						// existing user
+						else {
+							// update user info
+							var q = 'UPDATE user SET email = ?, name = ?, google_id = ?, picture = ?, is_active = ? WHERE email = ? AND google_id = ?';
+							var d = [google.email, google.name, google.sub, google.picture, google.email_verified, google.email, google.sub];
+							db.query(q, d, function (e, r, f) {
+								if (e) throw e;
+								
+								// get user data
+								q = 'SELECT * FROM user WHERE email = ? AND google_id = ?';
+								d = [google.email, google.sub];
+								db.query(q, d, function (e, r, f) { console.log(r);
+									var userData = {};
+									userData.profile = r[0];
 									
-									// get user data
-									q = 'SELECT * FROM user WHERE email = ? AND google_id = ?';
-									d = [google.email, google.sub];
+									var index = userData.profile.email.charAt(0);
+									if (typeof(js.clients[index])==='undefined') {
+										js.clients[index] = {};
+									}
+									js.clients[index][userData.profile.email] = userData.profile;
+									js.socketRef[socket.id] = userData.profile.email;
+
+									// get contact list
+									q = 'SELECT contact.*, u2.name AS name, u2.email AS email, u2.picture AS picture FROM contact JOIN user u2 ON u2.id = contact.receiver_id WHERE contact.sender_id = ? UNION SELECT contact.*, u1.name AS name, u1.email AS email, u1.picture AS picture FROM contact JOIN user u1 ON u1.id = contact.sender_id WHERE contact.receiver_id = ?';
+									d = [userData.profile.id, userData.profile.id];
 									db.query(q, d, function (e, r, f) {
-										var userData = {};
-										userData.profile = r[0];
+										userData.contacts = r;
 										
-										var index = userData.profile.email.charAt(0);
-										if (typeof(js.clients[index])==='undefined') {
-											js.clients[index] = {};
-										}
-										js.clients[index][userData.profile.email] = userData.profile;
-										js.socketRef[socket.id] = userData.profile.email;
-
-										// get contact list
-										q = 'SELECT contact.*, u2.name AS name, u2.email AS email, u2.picture AS picture FROM contact JOIN user u2 ON u2.id = contact.receiver_id WHERE contact.sender_id = ? UNION SELECT contact.*, u1.name AS name, u1.email AS email, u1.picture AS picture FROM contact JOIN user u1 ON u1.id = contact.sender_id WHERE contact.receiver_id = ?';
-										d = [userData.profile.id, userData.profile.id];
-										db.query(q, d, function (e, r, f) {
-											userData.contacts = r;
+										// get active chats
+										q = 'SELECT * FROM chat_member WHERE user_id = ?';
+										d = [userData.profile.id];
+										db.query(q, d, function (e, r, f) { 
+											userData.chats = {};
 											
-											// get active chats
-											q = 'SELECT * FROM chat_member WHERE user_id = ?';
-											d = [userData.profile.id];
-											db.query(q, d, function (e, r, f) {
-												userData.chats = {};
-												
-												var validId = [];
-												
-												for (var key in r) {
-													validId.push(r[key]['chat_session_id']);
-												}
+											var validId = [];
+											
+											for (var key in r) {
+												validId.push(r[key]['chat_session_id']);
+											}
 
-												db.query('SELECT TABLE_C.* FROM (SELECT TABLE_A.user_id, TABLE_B.* FROM (SELECT chat_member.* FROM chat_member WHERE chat_member.chat_session_id IN ('+validId.toString()+') AND chat_member.user_id != "'+userData.profile.id+'") TABLE_A INNER JOIN (SELECT chat_message.* FROM chat_message WHERE chat_message.chat_session_id IN ('+validId.toString()+') ORDER BY chat_message.time_created DESC) TABLE_B ON TABLE_A.chat_session_id = TABLE_B.chat_session_id GROUP BY TABLE_B.chat_session_id) TABLE_C ORDER BY TABLE_C.time_created DESC', function (e, r, f) {
+											db.query('SELECT TABLE_C.* FROM (SELECT TABLE_A.user_id, TABLE_B.* FROM (SELECT chat_member.* FROM chat_member WHERE chat_member.chat_session_id IN ('+validId.toString()+') AND chat_member.user_id != "'+userData.profile.id+'") TABLE_A INNER JOIN (SELECT chat_message.* FROM chat_message WHERE chat_message.chat_session_id IN ('+validId.toString()+') ORDER BY chat_message.time_created DESC) TABLE_B ON TABLE_A.chat_session_id = TABLE_B.chat_session_id GROUP BY TABLE_B.chat_session_id) TABLE_C ORDER BY TABLE_C.time_created DESC', function (e, r, f) {
+												
+												userData.chats = typeof(r)==='undefined' ? {} : r;
+												
 													
-													userData.chats = r;
-													console.log(r);
-														
-													// send data to client
-													socket.emit('setUser', userData);
-														
-												});
+												// send data to client
+												socket.emit('setUser', userData);
+													
 											});
-											
 										});
 									});
 								});
-							}
-						});
-					}
+							});
+						}
+					});
 				}
+			}
 		});
 	});
 	

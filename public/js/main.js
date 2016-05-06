@@ -463,6 +463,8 @@ app = {
         
         var contacts = data.contacts;
         
+        if (Object.getOwnPropertyNames(contacts).length === 0) return;
+        
         contacts.forEach(function(val, key, arr) {
             val.userId = val.sender_id == app.client.id ? val.receiver_id : val.sender_id;
         });
@@ -483,6 +485,8 @@ app = {
         var msg = '';
         var readCount = '<i class="material-icons">check</i>';
         var html = '';
+        
+        if (Object.getOwnPropertyNames(chats).length === 0) return;
         
         chats.forEach(function(val, key, arr) {
             for (var key in contacts ) {
