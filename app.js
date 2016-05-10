@@ -159,7 +159,7 @@ io.on('connection', function(socket){
 								// get user data
 								q = 'SELECT * FROM user WHERE email = ? AND google_id = ?';
 								d = [google.email, google.sub];
-								db.query(q, d, function (e, r, f) { console.log(r);
+								db.query(q, d, function (e, r, f) {
 									var userData = {};
 									userData.profile = r[0];
 									

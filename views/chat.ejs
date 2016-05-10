@@ -47,7 +47,7 @@
                     <button class="send-btn mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" data-input="canvas">
                         <i class="material-icons">send</i>
                     </button>
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" disabled>
+                    <button class="canvas-undo mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" disabled>
                         <i class="material-icons">undo</i>
                     </button>
                     <button class="canvas-delete mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
@@ -67,24 +67,24 @@
                 </div>
             </div>
             
-            <div id="input-location" class="bg-contain" style="background-image: url('img/google-maps.png');">
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+            <div id="input-image" class="bg-cover" style="background-image: url('img/placeholder.png');">
+                <button class="send-btn mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" data-input="image" disabled >
                     <i class="material-icons">send</i>
                 </button>
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                <button class="image-select mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                    <i class="material-icons">file_upload</i>
+                </button>
+                <input type="file" name="image-input" class="off-screen" />
+            </div>
+            
+            <div id="input-location" class="bg-contain" style="background-image: url('img/google-maps.png');">
+                <button class="send-btn mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" data-input="location">
+                    <i class="material-icons">send</i>
+                </button>
+                <button class="location-search mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
                     <i class="material-icons">location_searching</i>
                 </button>
             </div>
-            
-            <div id="input-image" class="bg-cover" style="background-image: url('img/placeholder.png');">
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                    <i class="material-icons">send</i>
-                </button>
-                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                    <i class="material-icons">file_upload</i>
-                </button>
-            </div>
-            
             
             <button data-input="text" class="input-option animate mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
                 <i class="material-icons">font_download</i>
@@ -105,65 +105,3 @@
         </div>
     </main>
 </div>
-
-<!--script>
-    ###################################################################
-    ###################################################################
-    //input preview
-    $('#file-prev, .input-file i').on('click', function () {
-    	$('#file-input').click();
-    });
-    //file reader
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#file-prev').attr('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    
-    $('#file-input').change(function(){
-        readURL(this);
-    });
-    
-    ###################################################################
-    ###################################################################
-    //Geolocation 
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, showError, {enableHighAccuracy: true});
-        } else {
-            $('.input-location').html('<h3 class="text-center fullwidth marg-0">Geolocation is not supported by this browser.</h3>');
-        }
-    }
-    
-    function showPosition(position) {
-        var latlon = position.coords.latitude + "," + position.coords.longitude;
-    
-        var img_url = "http://maps.googleapis.com/maps/api/staticmap?center="
-        +latlon+"&zoom=16&size=350x250&sensor=false";
-    	
-        $('.input-location div').empty().append('<img src="'+img_url+'">');
-    }
-    
-    function showError(error) {
-        switch(error.code) {
-            case error.PERMISSION_DENIED:
-    			$('.input-location').html('<h3 class="text-center fullwidth marg-0">Please enable your location service from the settings.</h3>');
-                break;
-            case error.POSITION_UNAVAILABLE:
-    			$('.input-location').html('<h3 class="text-center fullwidth marg-0">Location information is unavailable.</h3>');
-                break;
-            case error.TIMEOUT:
-    			$('.input-location').html('<h3 class="text-center fullwidth marg-0">The request to get user location timed out.</h3>');
-                break;
-            case error.UNKNOWN_ERROR:
-    			$('.input-location').html('<h3 class="text-center fullwidth marg-0">An unknown error occurred.</h3>');
-                break;
-        }
-    }
-    
-
-</script-->

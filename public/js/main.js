@@ -168,8 +168,6 @@ app = {
       this.$layoutTitle = this.$layoutHeader.find('.mdl-layout-title');
       this.$backBtn = this.$layoutHeader.find('#back-btn');
       
-      //this.$layoutContent = $('.mdl-layout__content');
-      
       this.$inputOptBtn = $('#input-option');
       this.$inputOptsBtn = $('.input-option');
       
@@ -187,62 +185,148 @@ app = {
       this.canvasContext = this.canvas.getContext('2d');
       this.canvasRadius = 2;
       this.canvasDragging = false;
+      this.canvasHistory = [];
       this.$canvas = this.$inputCanvas.find('#canvas');
       this.$canvasInputColor = this.$inputCanvas.find('input[name="canvas-input-color"]');
       this.$canvasInputLineWidth = this.$inputCanvas.find('#canvas-input-lineWidth input');
       
       this.$canvasDeleteBtn = this.$inputCanvas.find('.canvas-delete');
+      this.$canvasUndoBtn = this.$inputCanvas.find('.canvas-undo');
       this.$canvasColorBtn = this.$inputCanvas.find('.canvas-color');
       this.$canvasLineWidthBtn = this.$inputCanvas.find('.canvas-lineWidth');
+      
+      this.$searchLocationBtn = this.$inputLocation.find('.location-search');
+      this.$imageSelectorBtn = this.$inputImage.find('.image-select');
+      this.$imageInput = this.$inputImage.find('input[name="image-input"]');
     },
     bindChatEvents : function () {
       this.$backBtn.on('click', this.openHome.bind(this));
       this.$inputOptBtn.on('click', this.toggleChatOpt.bind(this));
       this.$inputOptsBtn.on('click', this.selectInput.bind(this));
       this.$sendBtn.on('click', this.sendMsg.bind(this));
-      this.$canvas.on('mousedown vmousedown', this.mousedownCanvas.bind(this))
-                  .on('mousemove vmousemove', this.mousemoveCanvas.bind(this))
-                  .on('mouseup vmouseup', this.mouseupCanvas.bind(this));
+      this.$canvas.on('vmousedown', this.mousedownCanvas.bind(this))
+                  .on('vmousemove', this.mousemoveCanvas.bind(this))
+                  .on('vmouseup', this.mouseupCanvas.bind(this));
       this.$canvasDeleteBtn.on('click', this.clearCanvas.bind(this));
+      this.$canvasUndoBtn.on('click', this.undoCanvas.bind(this));
       this.$canvasColorBtn.on('click', this.selectCanvasColor.bind(this));
       this.$canvasInputColor.on('change', this.updateCanvasColor.bind(this));
       this.$canvasLineWidthBtn.on('click', this.toggleLineWidthInput.bind(this));
       this.$canvasInputLineWidth.on('change', this.setCanvasLineWidth.bind(this));
+      this.$searchLocationBtn.on('click', this.locateUser.bind(this));
+      this.$imageSelectorBtn.on('click', this.selectImageInput.bind(this));
+      this.$imageInput.on('change', this.showInputImagePreview.bind(this));
+    },
+    selectImageInput : function () {
+      this.$imageInput.click();
+    },
+    showInputImagePreview : function () {
+      var file    = document.querySelector('input[name="image-input"]').files[0];
+      var reader  = new FileReader();
+    
+      reader.addEventListener("load", function () {
+        app.$inputImage.css('background-image', 'url('+reader.result+')');
+      }, false);
+    
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    },
+    locateUser : function () {
+      if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(this.getUsersLocation.bind(this), this.getUsersLocationError.bind(this), {enableHighAccuracy: true});
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    },
+    getUsersLocation : function (position) {
+      var latlon = position.coords.latitude + "," + position.coords.longitude;
+      
+      var img_url = "https://maps.googleapis.com/maps/api/staticmap?center="+latlon+"&zoom=16&size=350x250&sensor=false";
+    	
+        this.$inputLocation.css('background-image', 'url('+img_url+')');
+        
+        this.client.latlon = latlon;
+    },
+    getUsersLocationError : function () {
+      var err = '';
+      
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          err = 'Please enable your location service from the settings.';
+          break;
+        case error.POSITION_UNAVAILABLE:
+          err = 'Location information is unavailable.';
+          break;
+        case error.TIMEOUT:
+          err = 'The request to get user location timed out.';
+          break;
+        case error.UNKNOWN_ERROR:
+          err = 'An unknown error occurred.';
+          break;
+      }
+        
+      console.log(err);
     },
     mousedownCanvas : function (e) {
       this.canvasDragging = true;
-      this.drawCanvas(e);
+      if (this.canvasDragging) this.drawCanvas(e);
     },
     mousemoveCanvas : function (e) {
-      this.drawCanvas(e);
+      if (this.canvasDragging) this.drawCanvas(e);
     },
     mouseupCanvas : function (e) {
       this.canvasDragging = false;
       this.canvasContext.beginPath();
+      
+      this.canvasHistory.push(this.canvas.toDataURL());
+      this.$canvasUndoBtn.prop('disabled', false);
+      console.log(this.canvasHistory);
     },
     drawCanvas : function (e) {
-      if(this.canvasDragging) {
-        var rect = this.canvas.getBoundingClientRect();
-        var xPos = (e.clientX - rect.left) / (rect.right - rect.left) * this.canvas.width;
-        var yPos = (e.clientY - rect.top) / (rect.bottom - rect.top) * this.canvas.height;
-        
-        this.canvasContext.lineWidth = this.canvasRadius*2;
-        this.canvasContext.lineTo(xPos, yPos);
-        this.canvasContext.stroke();
-        this.canvasContext.beginPath();
-        this.canvasContext.arc(xPos, yPos, this.canvasRadius, 0, Math.PI*2);
-        this.canvasContext.fill();
-        this.canvasContext.beginPath();
-        this.canvasContext.moveTo(xPos, yPos);
-      }
+      var rect = this.canvas.getBoundingClientRect();
+      var xPos = (e.clientX - rect.left) / (rect.right - rect.left) * this.canvas.width;
+      var yPos = (e.clientY - rect.top) / (rect.bottom - rect.top) * this.canvas.height;
+      
+      this.canvasContext.lineWidth = this.canvasRadius*2;
+      this.canvasContext.lineTo(xPos, yPos);
+      this.canvasContext.stroke();
+      this.canvasContext.beginPath();
+      this.canvasContext.arc(xPos, yPos, this.canvasRadius, 0, Math.PI*2);
+      this.canvasContext.fill();
+      this.canvasContext.beginPath();
+      this.canvasContext.moveTo(xPos, yPos);
     },
     clearCanvas : function () {
+      var defaultColor = '#354b60';
+      this.$canvasInputColor.val(defaultColor);
       this.canvas.width = this.$canvas.width();
       this.canvas.height = this.$canvas.height();
       this.canvasContext.lineWidth = this.canvasRadius*2;
-      this.canvasContext.fillStyle = '#354b60';
-      this.canvasContext.strokeStyle = '#354b60';
-      this.$canvasColorBtn.css('color', '#354b60');
+      this.canvasContext.fillStyle = this.$canvasInputColor.val();
+      this.canvasContext.strokeStyle = this.$canvasInputColor.val();
+      this.$canvasColorBtn.css('color', this.$canvasInputColor.val());
+      this.$canvasUndoBtn.prop('disabled', true);
+      this.canvasHistory = [];
+    },
+    undoCanvas : function () {
+      this.canvas.width = this.$canvas.width();
+      this.canvas.height = this.$canvas.height();
+      this.canvasContext.fillStyle = this.$canvasInputColor.val();
+      this.canvasContext.strokeStyle = this.$canvasInputColor.val();
+      
+      if (this.canvasHistory.length > 1) {
+        this.$canvasUndoBtn.prop('disabled', false);
+        var img = new Image();
+        img.src = this.canvasHistory[this.canvasHistory.length - 2];
+        this.canvasContext.drawImage(img, 0, 0, this.$canvas.width(), this.$canvas.height(), 0, 0, this.$canvas.width(), this.$canvas.height());
+        this.canvasHistory.pop();
+      } else {
+        this.$canvasUndoBtn.prop('disabled', true);
+        this.canvasHistory = [];
+      }
+      
+      console.log(this.canvasHistory);
     },
     selectCanvasColor : function () {
       this.$canvasInputColor.click();
@@ -294,7 +378,8 @@ app = {
               message = '<img src="'+data.message.msg+'" />';
               break;
             case 'location':
-              message = '<img src="'+data.message.msg+'" />';
+              var src = "https://maps.googleapis.com/maps/api/staticmap?center="+data.message.msg+"&zoom=16&size=350x250&sensor=false";
+              message = '<img src="'+src+'" />';
               break;
             case 'image':
               break;
@@ -329,9 +414,10 @@ app = {
         case 'canvas':
           msg = this.canvas.toDataURL();
           this.clearCanvas();
-          //##########################################
+          this.canvasHistory = [];
           break;
         case 'location':
+          msg = this.client.latlon;
           break;
         case 'image':
           break;
@@ -375,6 +461,8 @@ app = {
               message = '<img src="'+data.message.msg+'" />';
               break;
             case 'location':
+              var src = "https://maps.googleapis.com/maps/api/staticmap?center="+data.message.msg+"&zoom=16&size=350x250&sensor=false";
+              message = '<img src="'+src+'" />';
               break;
             case 'image':
               break;
@@ -413,10 +501,12 @@ app = {
         case 'canvas':
           this.$inputCanvas.show();
           this.$inputContainer.css('min-height', '310px');
+          this.clearCanvas();
           break;
         case 'location':
           this.$inputLocation.show();
           this.$inputContainer.css('min-height', '260px');
+          this.locateUser();
           break;
         case 'image':
           this.$inputImage.show();

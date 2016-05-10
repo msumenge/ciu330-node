@@ -25,7 +25,7 @@ git push -u origin master
 $ mysql-ctl start
 
 # stop MySQL
-$ mysql-ctl stop;
+$ mysql-ctl stop
 
 # run the MySQL interactive shell
 $ mysql-ctl cli
